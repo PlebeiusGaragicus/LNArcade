@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+
+.DS_Store
+.vscode/
+
+# app/*
+
+.env
+
+*.log

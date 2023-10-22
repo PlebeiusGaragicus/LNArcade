@@ -1,0 +1,18 @@
+python-dotenv
+
+pygame
+pyglet
+
+pywebio
+
+pyftdi
+adafruit-circuitpython-seesaw
+adafruit-blinka
+adafruit-circuitpython-lis3dh
+
+adafruit-circuitpython-charlcd
+adafruit-circuitpython-rgb-display
+
+# NO SUCH PACKAGE
+# rainbowio
+# adafruit-circuitpython-rotaryio
