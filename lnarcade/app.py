@@ -1,4 +1,3 @@
-import os
 import platform
 import threading
 import subprocess
@@ -34,7 +33,6 @@ class Singleton:
 
 
 class App(Singleton):
-    # window: arcade.Window = None
     screen = None
     process: subprocess.Popen = None
 
@@ -75,21 +73,16 @@ class App(Singleton):
         logger.debug("Configuring application instance...")
         logger.debug("lnarcade installed at: %s", MY_DIR)
 
-        ret = pygame.init()
-        logger.debug("pygame.init() returned: %s", ret)
+        pygame.init()
+        pygame.font.init()
 
-        # pygame.font.init()
-        # app.width, app.height = pygame.display.get_surface().get_size()
-        # app.width, app.height = pygame.display.Info().current_w, pygame.display.Info().current_h
         _vid_info = pygame.display.Info()
         app.width, app.height = _vid_info.current_w, _vid_info.current_h
-
         logger.debug("Display size: %s x %s", app.width, app.height)
 
         # NOTE: DON'T DO FULLSCREEN FOR THE LOVE OF GOD!!!
-        app.screen = pygame.display.set_mode((app.width, app.height), flags=pygame.NOFRAME)
-        # app.screen = pygame.display.set_mode((app.width, app.height), pygame.FULLSCREEN)
         # app.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
+        app.screen = pygame.display.set_mode((app.width, app.height), flags=pygame.NOFRAME)
 
         global APP_SCREEN
         APP_SCREEN = app.screen
@@ -116,20 +109,18 @@ class App(Singleton):
 
 
         ### SETUP 'HELPER' THREADS ###
-        # if platform.system() != 'Darwin':
-        #     from lnarcade.control.controlmanager import ControlManager
-        #     app.controlmanager = ControlManager()
-        #     app.control_thread = threading.Thread(target=app.controlmanager.run)
-        #     app.control_thread.daemon = True # this is needed so that when the main process exits the control thread will also exit
-        # else:
-        #     app.controlmanager = None
-        app.controlmanager = None
+        if platform.system() != 'Darwin':
+            from lnarcade.control.controlmanager import ControlManager
+            app.controlmanager = ControlManager()
+            app.control_thread = threading.Thread(target=app.controlmanager.run)
+            app.control_thread.daemon = True # this is needed so that when the main process exits the control thread will also exit
+        else:
+            app.controlmanager = None
 
-        # from lnarcade.backend.server import ArcadeServerPage
-        # app.backend = ArcadeServerPage( DOT_ENV_PATH )
-        # app.backend_thread = threading.Thread(target=app.backend.start_server)
-        # app.backend_thread.daemon = True
-        app.backend_thread = None
+        from lnarcade.backend.server import ArcadeServerPage
+        app.backend = ArcadeServerPage( DOT_ENV_PATH )
+        app.backend_thread = threading.Thread(target=app.backend.start_server)
+        app.backend_thread.daemon = True
 
         return cls._instance
 
@@ -137,22 +128,15 @@ class App(Singleton):
     def start(self):
         logger.debug("App.get_instance().start()")
 
-
+        self.backend_thread.start()
         if self.controlmanager is not None:
-            logger.debug("starting the control thread")
             self.control_thread.start()
         else:
             logger.debug("skipping the control thread (becuase we're on MacOS))")
 
-        if self.backend_thread is not None:
-            logger.debug("starting the backend thread")
-            self.backend_thread.start()
-        else:
-            logger.debug("skipping the backend thread)")
 
-
-        self.manager.change_state("splash")
-        # self.manager.change_state("game_select")
+        # self.manager.change_state("splash")
+        self.manager.change_state("game_select")
 
         try:
             running = True
@@ -165,7 +149,6 @@ class App(Singleton):
                     self.manager.handle_event(event)
 
                 self.manager.update()
-                # self.manager.draw(self.screen)
                 self.manager.draw()
 
                 pygame.display.flip()
@@ -174,29 +157,13 @@ class App(Singleton):
         except KeyboardInterrupt:
             logger.warning("KeyboardInterrupt")
         
-        # except NotImplementedError:
-        #     logger.critical("NotImplementedError")
-
-        #     from lnarcade.view.error import ErrorModalView
-        #     self.manager.add_state("error", ErrorModalView("NotImplementedError", None))
-        #     self.manager.change_state("error")
-
-            # while True:
-            #     for event in pygame.event.get():
-            #         if event.type == pygame.QUIT:
-            #             running = False
-            #         self.manager.handle_event(event)
-
-            #     self.manager.draw()
+        except NotImplementedError:
+            logger.critical("NotImplementedError")
+            # from lnarcade.view.error import ErrorModalView
+            # self.manager.add_state("error", ErrorModalView("NotImplementedError", None))
+            # self.manager.change_state("error")
 
         self.stop()
-
-        #     pygame.quit()
-        #     self.control_thread.join(0.1)
-        #     self.backend_thread.join(0.1)
-        #     exit(0)
-
-        # pygame.quit()
 
 
     def kill_running_process(self):
@@ -208,8 +175,8 @@ class App(Singleton):
         self.process = None
 
 
-    def get_ip_addr(self):
-        return subprocess.getoutput("hostname -I").split()[0]
+    # def get_ip_addr(self):
+    #     return subprocess.getoutput("hostname -I").split()[0]
 
 
     # def stop(self, force: bool = False):

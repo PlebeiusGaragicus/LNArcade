@@ -12,7 +12,7 @@ DATA_DIR = str(Path.home() / ".config")
 DOT_ENV_PATH = os.path.join(DATA_DIR, ".lnarcade")
 
 # located in the home folder
-APP_FOLDER = "arcade-apps"
+APP_FOLDER = "LNApps"
 
 SHOW_MOUSE = False
 SCREEN_TITLE = "Lightning Arcade"

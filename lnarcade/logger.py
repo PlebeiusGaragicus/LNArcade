@@ -27,7 +27,6 @@ class ColoredFormatter(logging.Formatter):
 def setup_logging():
     debug = os.getenv("DEBUG", False)
     if debug:
-        # log_format = "%(name)s %(levelname)s | (%(filename)s @ %(lineno)d) | %(message)s"
         log_format = "%(levelname)s | (%(filename)s @ %(lineno)d) | %(message)s"
     else:
         log_format = "%(levelname)s | %(message)s"
@@ -39,5 +38,4 @@ def setup_logging():
 
     logging.basicConfig(level=logging.DEBUG if debug != False else logging.INFO, handlers=[console_handler])
 
-    logging.getLogger("arcade").setLevel(logging.WARNING)
-    logging.getLogger("PIL").setLevel(logging.INFO)
+    logging.getLogger("arcade").setLevel(logging.INFO)
