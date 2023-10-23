@@ -82,7 +82,10 @@ class App(Singleton):
 
         # NOTE: DON'T DO FULLSCREEN FOR THE LOVE OF GOD!!!
         # app.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
-        app.screen = pygame.display.set_mode((app.width, app.height), flags=pygame.NOFRAME)
+        if platform.system() == 'Darwin':
+            app.screen = pygame.display.set_mode((app.width, app.height), flags=pygame.NOFRAME)
+        else:
+            app.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.NOFRAME)
 
         global APP_SCREEN
         APP_SCREEN = app.screen

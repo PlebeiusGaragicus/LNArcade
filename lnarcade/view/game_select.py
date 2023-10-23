@@ -1,4 +1,5 @@
 import os
+import platform
 import time
 import logging
 logger = logging.getLogger()
@@ -249,6 +250,15 @@ class GameSelectView(ViewState):
         #     self.window.set_fullscreen(True)
         # pygame.init()
         # pygame.display.toggle_fullscreen()
+
+        # pygame.display.get_active
+        # pygame.display.flip()
+
+        global APP_SCREEN
+        if platform.system() == 'Darwin':
+            APP_SCREEN = pygame.display.set_mode(flags=pygame.NOFRAME)
+        else:
+            APP_SCREEN = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.NOFRAME)
 
 
 

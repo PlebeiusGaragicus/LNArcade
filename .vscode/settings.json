@@ -1,0 +1,8 @@
+{
+    "sync-rsync.remote": "satoshi@lnarcade.local:/home/satoshi/LNArcade/",
+    "sync-rsync.onSave": true,
+    "sync-rsync.onSaveIndividual": true,
+    "sync-rsync.options": [],
+    "sync-rsync.sites": [],
+    "sync-rsync.notification": false
+}
